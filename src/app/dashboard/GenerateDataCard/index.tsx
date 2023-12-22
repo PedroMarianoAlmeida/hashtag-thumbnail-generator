@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 import GenerateDataForm from "./GenerateDataForm";
-import HashtagsList from "./HashtagsList";
+import GeneratedData from "./GeneratedData";
 
 export interface aiDataProps {
   imageUrl: { revised_prompt?: string; url?: string };
@@ -20,7 +20,7 @@ const GenerateData = () => {
       <div className="card-body">
         <h2 className="card-title">New Hashtags and Thumbnail!</h2>
         <GenerateDataForm setAiData={setAiData} />
-        <HashtagsList hashtags={aiData.hashtags} />
+        <GeneratedData aiData={aiData} />
       </div>
     </div>
   );
