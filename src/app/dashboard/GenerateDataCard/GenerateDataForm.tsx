@@ -4,7 +4,11 @@ import { useMutation } from "@tanstack/react-query";
 
 import { generateHashtags } from "@/server/actions/ai";
 
-const GenerateDataForm = () => {
+interface GenerateDataFormProps {
+  setHashtags: (hashtags: string[]) => void;
+}
+
+const GenerateDataForm = ({ setHashtags }: GenerateDataFormProps) => {
   const [title, setTitle] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>("");
 
@@ -15,7 +19,7 @@ const GenerateDataForm = () => {
         setErrorMessage("Something went wrong");
         return;
       }
-
+      setHashtags(data)
       setErrorMessage(null);
     },
     onError: () => {

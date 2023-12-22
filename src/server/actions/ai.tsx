@@ -32,6 +32,7 @@ export const generateHashtags = async (title: string) => {
 
     return hashtags;
   } catch (err) {
+    console.log({ err });
     return null;
   }
 };
