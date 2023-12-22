@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "prisma-generate": "prisma generate",
+    "postinstall": "prisma generate",
     "db-push": "npx prisma db push",
     "prisma-format": "npx prisma format"
   },
