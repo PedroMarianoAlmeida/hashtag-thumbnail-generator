@@ -14,7 +14,7 @@ const GenerateData = () => {
     hashtags: [],
     imageUrl: { revised_prompt: "", url: "" },
   });
-  console.log({ aiData });
+
   return (
     <div className="card bg-base-200 shadow-xl w-full max-w-xl">
       <div className="card-body">

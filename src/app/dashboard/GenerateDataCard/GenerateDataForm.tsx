@@ -1,5 +1,5 @@
 "use client";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 import { generateData } from "@/server/actions/ai";
@@ -11,22 +11,21 @@ interface GenerateDataFormProps {
 
 const GenerateDataForm = ({ setAiData }: GenerateDataFormProps) => {
   const [title, setTitle] = useState("");
-  const [errorMessage, setErrorMessage] = useState<string | null>("");
+  const [message, setMessage] = useState<string | null>("");
 
   const { mutateAsync, isIdle, isSuccess } = useMutation({
     mutationFn: generateData,
     onSuccess: (data) => {
       if (data === null) {
-        setErrorMessage("Something went wrong");
+        setMessage("Something went wrong");
         return;
       }
 
-      const { imageUrl, hashtags } = data;
       setAiData(data);
-      setErrorMessage(null);
+      setMessage(null);
     },
     onError: () => {
-      setErrorMessage("Something went wrong");
+      setMessage("Something went wrong");
     },
   });
 
@@ -34,6 +33,12 @@ const GenerateDataForm = ({ setAiData }: GenerateDataFormProps) => {
     e.preventDefault();
     mutateAsync(title);
   };
+
+  useEffect(() => {
+    if (!isIdle && !isSuccess) {
+      setMessage("Loading...");
+    }
+  }, [isIdle, isSuccess]);
 
   return (
     <form className="flex flex-col gap-5 mt-5" onSubmit={handleSubmit}>
@@ -52,7 +57,7 @@ const GenerateDataForm = ({ setAiData }: GenerateDataFormProps) => {
           Generate
         </button>
       </div>
-      {errorMessage}
+      {message}
     </form>
   );
 };

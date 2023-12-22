@@ -8,9 +8,17 @@ interface GeneratedDataProps {
 const GeneratedData = ({
   aiData: { hashtags, imageUrl },
 }: GeneratedDataProps) => {
+  if (
+    hashtags.length === 0 &&
+    imageUrl.revised_prompt === "" &&
+    imageUrl.url === ""
+  )
+    return;
+
   return (
-    <div>
-      <div className="flex gap-3">
+    <div className="flex flex-col gap-3">
+      <h2>Here is your content!</h2>
+      <div className="flex gap-3 flex-wrap">
         {hashtags.map((hashtag) => (
           <div className="badge badge-neutral" key={hashtag}>
             #{hashtag}
