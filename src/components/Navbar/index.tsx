@@ -23,7 +23,7 @@ export const Navbar = async () => {
         <ConditionalAction userEmail={userEmail} />
         <Link
           className="text-sm font-medium hover:underline underline-offset-4"
-          href="#"
+          href="/about"
         >
           About
         </Link>
