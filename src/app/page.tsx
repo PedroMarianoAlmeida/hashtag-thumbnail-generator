@@ -4,7 +4,6 @@ import CTA from "@/components/CTA";
 
 export default async function Home() {
   const session = await getServerSession();
-  console.log({ session });
   const isLogged = !!session?.user?.email;
 
   return (
