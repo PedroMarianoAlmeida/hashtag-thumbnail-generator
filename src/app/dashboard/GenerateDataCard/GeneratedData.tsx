@@ -34,6 +34,8 @@ const GeneratedData = ({
           alt={imageUrl.revised_prompt}
         />
       ) : null}
+
+      <p>Refresh the page to use it again</p>
     </div>
   );
 };

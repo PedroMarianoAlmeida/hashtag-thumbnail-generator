@@ -24,7 +24,10 @@ const DashboardPage = async () => {
       {dailyUsage > 2 ? (
         <p>You reach the limit of 3, try again tomorrow</p>
       ) : (
-        <GenerateData />
+        <>
+          <p>Usage: {dailyUsage}/3</p>
+          <GenerateData />
+        </>
       )}
     </main>
   );

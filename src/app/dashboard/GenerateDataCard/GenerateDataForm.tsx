@@ -52,7 +52,7 @@ const GenerateDataForm = ({ setAiData }: GenerateDataFormProps) => {
       <div className="card-actions">
         <button
           className="btn btn-primary"
-          disabled={(!isIdle && !isSuccess) || title === ""}
+          disabled={(!isIdle && !isSuccess) || title === "" || isSuccess}
         >
           Generate
         </button>
