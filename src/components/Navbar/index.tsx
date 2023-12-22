@@ -1,7 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
+import ConditionalAction from "./ConditionalAction";
+import { getServerSession } from "next-auth";
 
-export const Navbar = () => {
+export const Navbar = async () => {
+  const session = await getServerSession();
+  const userEmail = session?.user?.email ?? null;
+
   return (
     <header className="px-4 lg:px-6 h-14 flex items-center">
       <Link className="flex items-center justify-center" href="/">
@@ -15,12 +20,7 @@ export const Navbar = () => {
         >
           Home
         </Link>
-        <Link
-          className="text-sm font-medium hover:underline underline-offset-4"
-          href="#"
-        >
-          Dashboard / Login
-        </Link>
+        <ConditionalAction userEmail={userEmail} />
         <Link
           className="text-sm font-medium hover:underline underline-offset-4"
           href="#"
