@@ -1,25 +1,28 @@
 "use client";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
-import { generateHashtags } from "@/server/actions/ai";
+import { generateData } from "@/server/actions/ai";
+import { aiDataProps } from ".";
 
 interface GenerateDataFormProps {
-  setHashtags: (hashtags: string[]) => void;
+  setAiData: Dispatch<SetStateAction<aiDataProps>>;
 }
 
-const GenerateDataForm = ({ setHashtags }: GenerateDataFormProps) => {
+const GenerateDataForm = ({ setAiData }: GenerateDataFormProps) => {
   const [title, setTitle] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>("");
 
   const { mutateAsync, isIdle, isSuccess } = useMutation({
-    mutationFn: generateHashtags,
+    mutationFn: generateData,
     onSuccess: (data) => {
       if (data === null) {
         setErrorMessage("Something went wrong");
         return;
       }
-      setHashtags(data)
+
+      const { imageUrl, hashtags } = data;
+      setAiData(data);
       setErrorMessage(null);
     },
     onError: () => {

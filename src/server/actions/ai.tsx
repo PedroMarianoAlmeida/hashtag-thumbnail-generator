@@ -1,4 +1,5 @@
 "use server";
+import { aiDataProps } from "@/app/dashboard/GenerateDataCard";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
@@ -6,7 +7,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY ?? "",
 });
 
-export const generateHashtags = async (title: string) => {
+const generateHashtags = async (title: string) => {
   try {
     if (title === "") {
       throw new Error("No title provided");
@@ -35,4 +36,22 @@ export const generateHashtags = async (title: string) => {
     console.log({ err });
     return null;
   }
+};
+
+const generateImage = async (title: string) => {
+  const image = await openai.images.generate({
+    model: "dall-e-3",
+    prompt: title,
+  });
+
+  return image.data[0] ;
+};
+
+export const generateData = async (title: string): Promise<aiDataProps> => {
+  const [imageUrl, hashtags] = await Promise.all([
+    await generateImage(title),
+    await generateHashtags(title),
+  ]);
+
+  return { imageUrl, hashtags };
 };
