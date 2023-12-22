@@ -7,14 +7,27 @@ const openai = new OpenAI({
 });
 
 export const generateHashtags = async (title: string) => {
-  console.log("generateHashtags");
   try {
     const completion = await openai.chat.completions.create({
-      messages: [{ role: "system", content: "You are a helpful assistant." }],
+      messages: [
+        {
+          role: "system",
+          content:
+            "You will work as a SEO assistant, providing the best hashtags for my text, The answer should be in a JSON format in a array with the field called hashtags.",
+        },
+        { role: "user", content: title },
+      ],
       model: "gpt-3.5-turbo",
     });
 
-    console.log(completion.choices[0]);
+    const { hashtags } =
+      JSON.parse(completion.choices[0].message.content ?? "") ?? [];
+
+    if (hashtags.length === 0) {
+      throw new Error("No hashtags found");
+    }
+
+    return hashtags;
   } catch (err) {
     console.log(err);
   }
