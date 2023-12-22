@@ -6,16 +6,22 @@ import { generateHashtags } from "@/server/actions/ai";
 
 const GenerateDataForm = () => {
   const [title, setTitle] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>("");
 
   const { mutateAsync, isIdle, isSuccess } = useMutation({
     mutationFn: generateHashtags,
     onSuccess: (data) => {
-      console.log(data);
-    },
-    onError: () => {},
-  });
+      if (data === null) {
+        setErrorMessage("Something went wrong");
+        return;
+      }
 
-  console.log({ isIdle, isSuccess });
+      setErrorMessage(null);
+    },
+    onError: () => {
+      setErrorMessage("Something went wrong");
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,10 +38,14 @@ const GenerateDataForm = () => {
       />
 
       <div className="card-actions">
-        <button className="btn btn-primary" disabled={!isIdle && !isSuccess}>
+        <button
+          className="btn btn-primary"
+          disabled={(!isIdle && !isSuccess) || title === ""}
+        >
           Generate
         </button>
       </div>
+      {errorMessage}
     </form>
   );
 };

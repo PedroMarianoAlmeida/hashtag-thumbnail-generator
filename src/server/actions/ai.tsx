@@ -8,12 +8,15 @@ const openai = new OpenAI({
 
 export const generateHashtags = async (title: string) => {
   try {
+    if (title === "") {
+      throw new Error("No title provided");
+    }
     const completion = await openai.chat.completions.create({
       messages: [
         {
           role: "system",
           content:
-            "You will work as a SEO assistant, providing the best hashtags for my text, The answer should be in a JSON format in a array with the field called hashtags.",
+            "You will work as a SEO assistant, providing the best hashtags for my text, The answer should be in a JSON format in a array with the field called hashtags (and only the text, without the # symbol).",
         },
         { role: "user", content: title },
       ],
@@ -29,6 +32,6 @@ export const generateHashtags = async (title: string) => {
 
     return hashtags;
   } catch (err) {
-    console.log(err);
+    return null;
   }
 };
