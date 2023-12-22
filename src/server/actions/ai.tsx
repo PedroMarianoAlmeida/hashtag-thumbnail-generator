@@ -1,6 +1,12 @@
 "use server";
 import { aiDataProps } from "@/app/dashboard/GenerateDataCard";
 import OpenAI from "openai";
+import { getServerSession } from "next-auth";
+
+import {
+  getUserCountUsageForToday,
+  incrementUserCountUsage,
+} from "./userCount";
 
 const openai = new OpenAI({
   organization: process.env.OPENAI_API_ORGANIZATION ?? "",
@@ -44,14 +50,28 @@ const generateImage = async (title: string) => {
     prompt: title,
   });
 
-  return image.data[0] ;
+  return image.data[0];
 };
 
 export const generateData = async (title: string): Promise<aiDataProps> => {
+  const session = await getServerSession();
+  const userEmail = session?.user?.email ?? null;
+
+  if (!userEmail) {
+    throw new Error("User not logged in");
+  }
+
+  const count = await getUserCountUsageForToday(userEmail);
+  if (count >= 3) {
+    throw new Error("You reach the limit of 3, try again tomorrow");
+  }
+
   const [imageUrl, hashtags] = await Promise.all([
     await generateImage(title),
     await generateHashtags(title),
   ]);
+
+  await incrementUserCountUsage(userEmail);
 
   return { imageUrl, hashtags };
 };

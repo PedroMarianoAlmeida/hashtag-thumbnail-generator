@@ -23,3 +23,22 @@ export const getUserCountUsageForToday = async (email: string) => {
 
   return dailyUsage;
 };
+
+export const incrementUserCountUsage = async (email: string) => {
+  await prisma.user.upsert({
+    where: {
+      email: email,
+    },
+    update: {
+      lastUsage: new Date(),
+      dailyUsage: {
+        increment: 1,
+      },
+    },
+    create: {
+      email: email,
+      lastUsage: new Date(),
+      dailyUsage: 1,
+    },
+  });
+};
