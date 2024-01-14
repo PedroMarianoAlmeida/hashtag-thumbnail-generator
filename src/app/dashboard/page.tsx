@@ -16,7 +16,10 @@ const DashboardPage = async () => {
     );
   }
 
-  const dailyUsage = await getUserCountUsageForToday(userEmail);
+  const usageCount = await getUserCountUsageForToday(userEmail);
+  
+  if (!usageCount.success) return <p>Something went wrong</p>;
+  const { result: dailyUsage } = usageCount;
 
   return (
     <main className="flex flex-col items-center gap-10">

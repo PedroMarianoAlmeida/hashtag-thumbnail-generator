@@ -16,12 +16,12 @@ const GenerateDataForm = ({ setAiData }: GenerateDataFormProps) => {
   const { mutateAsync, isIdle, isSuccess } = useMutation({
     mutationFn: generateData,
     onSuccess: (data) => {
-      if (data === null) {
+      if (!data.success) {
         setMessage("Something went wrong");
         return;
       }
-
-      setAiData(data);
+      const { hashtags, imageUrl } = data.result;
+      setAiData({ hashtags, imageUrl });
       setMessage(null);
     },
     onError: () => {

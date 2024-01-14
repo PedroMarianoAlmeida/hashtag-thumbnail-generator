@@ -7,6 +7,8 @@ import {
   getUserCountUsageForToday,
   incrementUserCountUsage,
 } from "./userCount";
+import { asyncWrapper } from "@/utils/asyncWrapper";
+import { checkIfIsArray } from "@/utils/typeCheck";
 
 const openai = new OpenAI({
   organization: process.env.OPENAI_API_ORGANIZATION ?? "",
@@ -14,7 +16,7 @@ const openai = new OpenAI({
 });
 
 const generateHashtags = async (title: string) => {
-  try {
+  return asyncWrapper(async () => {
     if (title === "") {
       throw new Error("No title provided");
     }
@@ -33,45 +35,55 @@ const generateHashtags = async (title: string) => {
     const { hashtags } =
       JSON.parse(completion.choices[0].message.content ?? "") ?? [];
 
+    if (!checkIfIsArray<string>(hashtags)) throw new Error("No hashtags found");
+
     if (hashtags.length === 0) {
       throw new Error("No hashtags found");
     }
 
     return hashtags;
-  } catch (err) {
-    console.log({ err });
-    return null;
-  }
+  });
 };
 
 const generateImage = async (title: string) => {
-  const image = await openai.images.generate({
-    model: "dall-e-3",
-    prompt: title,
-  });
+  return asyncWrapper(async () => {
+    const image = await openai.images.generate({
+      model: "dall-e-3",
+      prompt: title,
+    });
 
-  return image.data[0];
+    return image.data[0];
+  });
 };
 
-export const generateData = async (title: string): Promise<aiDataProps> => {
-  const session = await getServerSession();
-  const userEmail = session?.user?.email ?? null;
+export const generateData = async (title: string) => {
+  return asyncWrapper(async () => {
+    const session = await getServerSession();
+    const userEmail = session?.user?.email ?? null;
 
-  if (!userEmail) {
-    throw new Error("User not logged in");
-  }
+    if (!userEmail) {
+      throw new Error("User not logged in");
+    }
 
-  const count = await getUserCountUsageForToday(userEmail);
-  if (count >= 3) {
-    throw new Error("You reach the limit of 3, try again tomorrow");
-  }
+    const count = await getUserCountUsageForToday(userEmail);
+    if (!count.success) throw new Error("Something went wrong");
+    const { result: dailyUsage } = count;
 
-  const [imageUrl, hashtags] = await Promise.all([
-    await generateImage(title),
-    await generateHashtags(title),
-  ]);
+    if (dailyUsage >= 3) {
+      throw new Error("You reach the limit of 3, try again tomorrow");
+    }
 
-  await incrementUserCountUsage(userEmail);
+    const [imageUrl, hashtags] = await Promise.all([
+      await generateImage(title),
+      await generateHashtags(title),
+    ]);
 
-  return { imageUrl, hashtags };
+    if (!imageUrl.success || !hashtags.success)
+      throw new Error("Something went wrong");
+
+    const increment = await incrementUserCountUsage(userEmail);
+    if (!increment.success) throw new Error("Something went wrong");
+
+    return { imageUrl: imageUrl.result, hashtags: hashtags.result };
+  });
 };
