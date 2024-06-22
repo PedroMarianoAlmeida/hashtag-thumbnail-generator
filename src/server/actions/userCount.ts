@@ -1,12 +1,9 @@
 "use server";
 
-import { get, ref, type DataSnapshot } from "firebase/database";
+import { get, set, ref, type DataSnapshot } from "firebase/database";
 import { asyncWrapper } from "@/utils/asyncWrapper";
 import { areInTheSameDay } from "@/utils/dates";
-import { PrismaClient } from "@prisma/client";
 import { database } from "../../../firebaseConfig";
-
-const prisma = new PrismaClient();
 
 const sanitizeUserCount = (
   user: DataSnapshot
@@ -16,7 +13,7 @@ const sanitizeUserCount = (
 
   if (typeof lastUsage !== "number") throw new Error();
   if (typeof dailyUsage !== "number") throw new Error();
-  console.log({ lastUsage, dailyUsage });
+
   return { lastUsage, dailyUsage };
 };
 
@@ -24,7 +21,7 @@ export const getUserCountUsageForToday = async (email: string) => {
   return asyncWrapper(async () => {
     const userRef = ref(database, `users/${btoa(email)}`);
     const existentUser = await get(userRef);
-    if (!existentUser) {
+    if (!existentUser.exists()) {
       return 0;
     }
 
@@ -40,21 +37,13 @@ export const getUserCountUsageForToday = async (email: string) => {
 
 export const incrementUserCountUsage = async (email: string) => {
   return asyncWrapper(async () => {
-    await prisma.user.upsert({
-      where: {
-        email: email,
-      },
-      update: {
-        lastUsage: new Date(),
-        dailyUsage: {
-          increment: 1,
-        },
-      },
-      create: {
-        email: email,
-        lastUsage: new Date(),
-        dailyUsage: 1,
-      },
+    const currentUsage = await getUserCountUsageForToday(email);
+
+    if (!currentUsage.success) return new Error();
+    const { result: dailyUsage } = currentUsage;
+    set(ref(database, `users/${btoa(email)}`), {
+      dailyUsage: dailyUsage + 1,
+      lastUsage: Number(new Date()),
     });
   });
 };
