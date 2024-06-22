@@ -26,7 +26,7 @@ const AboutPage = async () => {
       </p>
       <p className=" text-sm lg:text-base mb-4">
         <span className="font-bold">Tech Stack: </span>Next 14, , NextAuth,
-        TailwindCSS, Daisy UI, OpenAI API, Postgrees, Prisma, Vercel
+        TailwindCSS, Daisy UI, OpenAI API, Firebase, Vercel
       </p>
       <CTA isLogged={isLogged} />
     </main>
