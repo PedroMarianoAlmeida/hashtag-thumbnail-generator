@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-hashtagthumbnailgene-dev-5407a-authRole",
+      "UnauthRoleArn": "arn:aws:iam::257056548605:role/amplify-hashtagthumbnailgene-dev-5407a-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::257056548605:role/amplify-hashtagthumbnailgene-dev-5407a-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-hashtagthumbnailgene-dev-5407a-deployment",
+      "UnauthRoleName": "amplify-hashtagthumbnailgene-dev-5407a-unauthRole",
+      "StackName": "amplify-hashtagthumbnailgene-dev-5407a",
+      "StackId": "arn:aws:cloudformation:us-east-1:257056548605:stack/amplify-hashtagthumbnailgene-dev-5407a/0b026830-9736-11ef-9192-0affec8c1897",
+      "AmplifyAppId": "d9x4olxepw0l"
+    }
+  }
+}
