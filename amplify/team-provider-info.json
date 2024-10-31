@@ -10,6 +10,11 @@
       "StackName": "amplify-hashtagthumbnailgene-dev-5407a",
       "StackId": "arn:aws:cloudformation:us-east-1:257056548605:stack/amplify-hashtagthumbnailgene-dev-5407a/0b026830-9736-11ef-9192-0affec8c1897",
       "AmplifyAppId": "d9x4olxepw0l"
+    },
+    "categories": {
+      "auth": {
+        "hashtagthumbnailgene52ea4f3c": {}
+      }
     }
   }
 }
