@@ -1,5 +1,4 @@
 "use client";
-import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 
 interface ConditionalActionProps {
@@ -18,7 +17,7 @@ const ConditionalAction = ({ userEmail }: ConditionalActionProps) => {
         </Link>
         <button
           className="text-sm font-medium hover:underline underline-offset-4"
-          onClick={() => signOut()}
+          onClick={() => {}}
         >
           Logout
         </button>
@@ -29,7 +28,7 @@ const ConditionalAction = ({ userEmail }: ConditionalActionProps) => {
   return (
     <button
       className="text-sm font-medium hover:underline underline-offset-4"
-      onClick={() => signIn()}
+      onClick={() => {}}
     >
       Login
     </button>
