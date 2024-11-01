@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { getServerSession } from "next-auth";
+import { AuthenticatorAws } from "@/components/Auth";
+
 import CTA from "@/components/CTA";
 
 export default async function Home() {
@@ -21,6 +23,7 @@ export default async function Home() {
                   social media posts, etc (the sky is the limit)
                 </p>
               </div>
+              <AuthenticatorAws />
               <CTA isLogged={isLogged} />
             </div>
             <div>
