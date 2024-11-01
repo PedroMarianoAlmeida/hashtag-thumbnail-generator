@@ -1,13 +1,8 @@
 import Image from "next/image";
-import { getServerSession } from "next-auth";
-import { AuthenticatorAws } from "@/components/Auth";
 
 import CTA from "@/components/CTA";
 
 export default async function Home() {
-  const session = await getServerSession();
-  const isLogged = !!session?.user?.email;
-
   return (
     <main className="flex-1">
       <section className="w-full py-12 sm:py-24 md:py-32 lg:py-48">
@@ -23,8 +18,8 @@ export default async function Home() {
                   social media posts, etc (the sky is the limit)
                 </p>
               </div>
-              <AuthenticatorAws />
-              <CTA isLogged={isLogged} />
+
+              <CTA />
             </div>
             <div>
               <Image

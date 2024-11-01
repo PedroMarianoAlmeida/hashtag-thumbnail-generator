@@ -1,12 +1,10 @@
 "use client";
+import useCurrentUser from "@/app/hooks/useCurrentUser";
 import Link from "next/link";
 
-interface ConditionalActionProps {
-  userEmail: string | null;
-}
-
-const ConditionalAction = ({ userEmail }: ConditionalActionProps) => {
-  if (userEmail) {
+const ConditionalAction = () => {
+  const user = useCurrentUser();
+  if (user.userId) {
     return (
       <>
         <Link
