@@ -1,10 +1,6 @@
 import CTA from "@/components/CTA";
-import { getServerSession } from "next-auth";
 
 const AboutPage = async () => {
-  const session = await getServerSession();
-  const isLogged = !!session?.user?.email;
-
   return (
     <main className="flex-1 p-4 lg:p-6">
       <h1 className="font-bold text-2xl lg:text-3xl mb-2">About Us</h1>
@@ -28,7 +24,7 @@ const AboutPage = async () => {
         <span className="font-bold">Tech Stack: </span>Next 14, , NextAuth,
         TailwindCSS, Daisy UI, OpenAI API, Firebase, Vercel
       </p>
-      <CTA isLogged={isLogged} />
+      <CTA />
     </main>
   );
 };
