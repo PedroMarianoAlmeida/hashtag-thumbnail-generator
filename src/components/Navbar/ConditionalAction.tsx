@@ -1,11 +1,18 @@
 "use client";
-import useCurrentUser from "@/app/hooks/useCurrentUser";
+import { useContext } from "react";
 import Link from "next/link";
 import { signOut } from "@aws-amplify/auth";
+import { AuthContext } from "@/components/Providers/AuthProvider";
 
 const ConditionalAction = () => {
-  const user = useCurrentUser();
-  if (user.userId) {
+  const { setUserId, userId } = useContext(AuthContext);
+
+  const handleSignOut = () => {
+    signOut();
+    setUserId(null);
+  };
+
+  if (userId) {
     return (
       <>
         <Link
@@ -16,7 +23,7 @@ const ConditionalAction = () => {
         </Link>
         <button
           className="text-sm font-medium hover:underline underline-offset-4"
-          onClick={() => signOut()}
+          onClick={handleSignOut}
         >
           Logout
         </button>
