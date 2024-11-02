@@ -13,7 +13,7 @@ Amplify.configure(awsExports);
 
 import "@aws-amplify/ui-react/styles.css";
 export const AuthenticatorAws = () => {
-  const {  setUserId } = useContext(AuthContext);
+  const { setUserId } = useContext(AuthContext);
   const router = useRouter();
 
   const handleUser = (user: AuthUser | undefined) => {
@@ -27,7 +27,6 @@ export const AuthenticatorAws = () => {
   return (
     <Authenticator>
       {({ user }) => {
-        console.log({ user });
         handleUser(user);
         return <></>;
       }}
