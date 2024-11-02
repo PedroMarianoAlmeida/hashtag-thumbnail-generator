@@ -17,9 +17,9 @@ const sanitizeUserCount = (
   return { lastUsage, dailyUsage };
 };
 
-export const getUserCountUsageForToday = async (email: string) => {
+export const getUserCountUsageForToday = async (userId: string) => {
   return asyncWrapper(async () => {
-    const userRef = ref(database, `users/${btoa(email)}`);
+    const userRef = ref(database, `users/${userId}`);
     const existentUser = await get(userRef);
     if (!existentUser.exists()) {
       return 0;
@@ -35,13 +35,13 @@ export const getUserCountUsageForToday = async (email: string) => {
   });
 };
 
-export const incrementUserCountUsage = async (email: string) => {
+export const incrementUserCountUsage = async (userId: string) => {
   return asyncWrapper(async () => {
-    const currentUsage = await getUserCountUsageForToday(email);
+    const currentUsage = await getUserCountUsageForToday(userId);
 
     if (!currentUsage.success) return new Error();
     const { result: dailyUsage } = currentUsage;
-    set(ref(database, `users/${btoa(email)}`), {
+    set(ref(database, `users/${userId}`), {
       dailyUsage: dailyUsage + 1,
       lastUsage: Number(new Date()),
     });

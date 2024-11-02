@@ -1,5 +1,4 @@
 "use server";
-import { aiDataProps } from "@/app/dashboard/GenerateDataCard";
 import OpenAI from "openai";
 import { getServerSession } from "next-auth";
 
@@ -56,16 +55,14 @@ const generateImage = async (title: string) => {
   });
 };
 
-export const generateData = async (title: string) => {
+export const generateData = async ({ title, userId }: { title: string, userId: string | null }) => {
   return asyncWrapper(async () => {
-    const session = await getServerSession();
-    const userEmail = session?.user?.email ?? null;
-
-    if (!userEmail) {
+    if (!userId) {
       throw new Error("User not logged in");
     }
 
-    const count = await getUserCountUsageForToday(userEmail);
+    const count = await getUserCountUsageForToday(userId);
+
     if (!count.success) throw new Error("Something went wrong");
     const { result: dailyUsage } = count;
 
@@ -81,9 +78,10 @@ export const generateData = async (title: string) => {
     if (!imageUrl.success || !hashtags.success)
       throw new Error("Something went wrong");
 
-    const increment = await incrementUserCountUsage(userEmail);
+    const increment = await incrementUserCountUsage(userId);
     if (!increment.success) throw new Error("Something went wrong");
 
     return { imageUrl: imageUrl.result, hashtags: hashtags.result };
   });
 };
+

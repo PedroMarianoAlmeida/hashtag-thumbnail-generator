@@ -1,9 +1,11 @@
 "use client";
-import { Dispatch, SetStateAction, useState, useEffect } from "react";
+import { Dispatch, SetStateAction, useState, useEffect, useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 import { generateData } from "@/server/actions/ai";
 import { aiDataProps } from ".";
+import { AuthContext } from "@/components/Providers/AuthProvider";
+
 
 interface GenerateDataFormProps {
   setAiData: Dispatch<SetStateAction<aiDataProps>>;
@@ -12,10 +14,13 @@ interface GenerateDataFormProps {
 const GenerateDataForm = ({ setAiData }: GenerateDataFormProps) => {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState<string | null>("");
+  const { userId } = useContext(AuthContext);
+  
 
   const { mutateAsync, isIdle, isSuccess } = useMutation({
     mutationFn: generateData,
     onSuccess: (data) => {
+      console.log({ data });
       if (!data.success) {
         setMessage("Something went wrong");
         return;
@@ -31,7 +36,7 @@ const GenerateDataForm = ({ setAiData }: GenerateDataFormProps) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutateAsync(title);
+    mutateAsync({ title, userId });
   };
 
   useEffect(() => {
